@@ -6,8 +6,6 @@ namespace Conversions {
         public static readonly char CH_ZERO = '0';
     }
 
-    // xx,70 -> seventy statt seventy-zero
-
     internal partial class NumbersToWordsConverter {
         // error strings / text format strings for exception messages
         static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL = "The given numbers string is null or empty.";
@@ -34,8 +32,10 @@ namespace Conversions {
                 throw new ArgumentException(string.Format(EXC_MSG_INVALID_CHARS_TF, numbers, SEPARATOR));
             }
 
-            // split input into dollars and cents
+            // split input into dollars and possibly cents
             string[] dollarsAndCents = numbers.Split(SEPARATOR);
+
+            // check of there are too many separators
             if (dollarsAndCents.Length > 2) {
                 int numberOfSeparators = dollarsAndCents.Length - 1;
                 throw new ArgumentException(string.Format(EXC_MSG_TOO_MANY_SEPARATORS_TF, numbers, numberOfSeparators));
@@ -48,17 +48,14 @@ namespace Conversions {
 
             string words = ConvertNumberIntoWords(dollars);
             words += words == "one" ? " dollar" : " dollars"; // TODO: auslagern (s. unten)
-            //Console.WriteLine(string.Format("dollarsAsWords: {0}", words));
             if (dollarsAndCents.Length == 2) { // also account for cents
                 string cents = SanitizeNumber(HandleCentInputWithOnlyOneDigit(RemoveWhitespaces(dollarsAndCents[1])));
                 if (cents.Length > MAX_DIGITS_CENTS) {
                     throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_OF_CENTS_EXCEEDED_TF, cents, new String(CH_NINE, MAX_DIGITS_CENTS)));
                 }
-                // TODO
                 string centsAsWords = ConvertNumberIntoWords(cents);
                 centsAsWords += centsAsWords == "one" ? " cent" : " cents"; // TODO: mit gleicher Zeile für dollar in methode auslagern
-                //Console.WriteLine(string.Format("centsAsWords: {0}", centsAsWords));
-                words += " and " + centsAsWords;
+                words += " and " + centsAsWords; // TODO: schöner machen?
             }
 
             return words;
@@ -66,6 +63,9 @@ namespace Conversions {
 
         [GeneratedRegex("^[0-9,\\s]+$")]
         private static partial Regex GenerateRegexForAllowedChars();
+
+        [GeneratedRegex("\\s")]
+        private static partial Regex GenerateRegexForWhitespaces();
 
         private static string SanitizeNumber(string number) {
             return NumberUtils.ReplaceEmptyStringWithZero(NumberUtils.TrimLeadingZeros(number));
@@ -83,12 +83,10 @@ namespace Conversions {
             string hundredsGroup = GetHundredsGroup(number);
             string thousandsGroup = GetThousandsGroup(number);
             string millionsGroup = GetMillionsGroups(number);
-            //Console.WriteLine(string.Format("hundredsGroup: {0}, thousandsGroup: {1}, millionsGroup: {2}, number: {3}", hundredsGroup, thousandsGroup, millionsGroup, number));
 
             string hgAsWord = ConvertNumberGroupIntoWord(hundredsGroup);
             string tgAsWord = ConvertNumberGroupIntoWord(thousandsGroup);
             string mgAsWord = ConvertNumberGroupIntoWord(millionsGroup);
-            //Console.WriteLine(string.Format("hgAsWord: {0}, tgAsWord: {1}, mgAsWord: {2}, number: {3}", hgAsWord, tgAsWord, mgAsWord, number));
 
             return string.Format("{0}{1}{2}", mgAsWord == string.Empty ? mgAsWord : mgAsWord + " million ", tgAsWord == string.Empty ? tgAsWord : tgAsWord + " thousand ", hgAsWord);
         }
@@ -157,8 +155,6 @@ namespace Conversions {
             '9' => "ninety",
             _ => throw new ArgumentException("TODO")
         };
-        [GeneratedRegex("\\s")]
-        private static partial Regex GenerateRegexForWhitespaces();
     }
 
     internal class NumberUtils {
