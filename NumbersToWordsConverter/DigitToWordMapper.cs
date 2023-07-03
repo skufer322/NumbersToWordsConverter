@@ -1,12 +1,19 @@
 ﻿namespace Conversions {
 
-    internal class DigitToWordMapper {
+    internal interface IDigitToWordMapper {
+        string ConvertDigitIntoWord0to9(char digit, int numberOfDigitsInGroup);
+        string ConvertDigitIntoWordOfTens(char digit);
+    }
 
+    internal class DigitToWordMapper : IDigitToWordMapper {
+        // text format strings for exception messages
         static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' to a word {1}. Only digits (from 0 to 9) can be converted.";
+
+        // constants
         static readonly string FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS = "of single digit numbers";
         static readonly string FRAGMENT_TYPE_TENS = "of tens";
 
-        public static string ConvertDigitIntoWord0to9(char digit, int numberOfDigitsInGroup) => digit switch {
+        public string ConvertDigitIntoWord0to9(char digit, int numberOfDigitsInGroup) => digit switch {
             '0' => numberOfDigitsInGroup == 1 ? "zero" : string.Empty,
             '1' => ConversionsConstants.W_ONE,
             '2' => ConversionsConstants.W_TWO,
@@ -20,7 +27,7 @@
             _ => throw new ArgumentException(string.Format(EXC_MSG_CHAR_IS_NOT_A_DIGIT, digit, FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS))
         };
 
-        public static string ConvertDigitIntoWordOfTens(char digit) => digit switch {
+        public string ConvertDigitIntoWordOfTens(char digit) => digit switch {
             '0' => string.Empty,
             '1' => ConversionsConstants.W_TEN,
             '2' => ConversionsConstants.W_TWENTY,

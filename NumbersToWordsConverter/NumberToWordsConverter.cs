@@ -2,7 +2,11 @@
 
 namespace Conversions {
 
-    internal partial class NumberToWordsConverter {
+    internal interface INumberToWordConverter {
+        string ConvertNumberIntoWords(string? numbers);
+    }
+
+    internal partial class NumberToWordsConverter : INumberToWordConverter {
         // error strings / text format strings for exception messages
         static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL = "The given numbers string is null or empty.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given numbers string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
@@ -19,7 +23,14 @@ namespace Conversions {
         [GeneratedRegex("^[0-9,\\s]+$")]
         private static partial Regex GenerateRegexForAllowedChars();
 
-        public static string ConvertNumberIntoWords(string? numbers) {
+        // class members
+        private INumbersAsGroupsOf3Handler numberGroupsHandler;
+
+        public NumberToWordsConverter(INumbersAsGroupsOf3Handler numberGroupsHandler) {
+            this.numberGroupsHandler = numberGroupsHandler;
+        }
+
+        public string ConvertNumberIntoWords(string? numbers) {
             // check for invalid inputs
             if (string.IsNullOrEmpty(numbers)) {
                 throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL);
@@ -59,27 +70,27 @@ namespace Conversions {
             return words;
         }
 
-        private static string SanitizeNumber(string number) {
+        private string SanitizeNumber(string number) {
             return StringifiedNumberUtils.ReplaceEmptyStringWithZero(StringifiedNumberUtils.TrimLeadingZeros(number));
         }
 
-        private static string HandleCentInputWithOnlyOneDigit(string number) {
+        private string HandleCentInputWithOnlyOneDigit(string number) {
             return number.Length == MAX_DIGITS_CENTS ? number : number + ConversionsConstants.CH_ZERO;
         }
 
-        private static string ConvertPreprocessedNumberIntoWords(string number) {
-            string hundredsGroup = NumbersAsGroupsOf3Handler.GetHundredsGroup(number);
-            string thousandsGroup = NumbersAsGroupsOf3Handler.GetThousandsGroup(number);
-            string millionsGroup = NumbersAsGroupsOf3Handler.GetMillionsGroups(number);
+        private string ConvertPreprocessedNumberIntoWords(string number) {
+            string hundredsGroup = numberGroupsHandler.GetHundredsGroup(number);
+            string thousandsGroup = numberGroupsHandler.GetThousandsGroup(number);
+            string millionsGroup = numberGroupsHandler.GetMillionsGroups(number);
 
-            string hgAsWord = NumbersAsGroupsOf3Handler.ConvertNumberGroupIntoWord(hundredsGroup);
-            string tgAsWord = NumbersAsGroupsOf3Handler.ConvertNumberGroupIntoWord(thousandsGroup);
-            string mgAsWord = NumbersAsGroupsOf3Handler.ConvertNumberGroupIntoWord(millionsGroup);
+            string hgAsWord = numberGroupsHandler.ConvertNumberGroupIntoWord(hundredsGroup);
+            string tgAsWord = numberGroupsHandler.ConvertNumberGroupIntoWord(thousandsGroup);
+            string mgAsWord = numberGroupsHandler.ConvertNumberGroupIntoWord(millionsGroup);
 
-            return string.Format("{0}{1}{2}", NumbersAsGroupsOf3Handler.GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), NumbersAsGroupsOf3Handler.GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
+            return string.Format("{0}{1}{2}", numberGroupsHandler.GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), numberGroupsHandler.GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
         }
 
-        private static string GetCurrencyFragmentWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
+        private string GetCurrencyFragmentWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
             string fragmentWithCorrectCardinality = numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural;
             return string.Format(" {0}", fragmentWithCorrectCardinality);
         }
