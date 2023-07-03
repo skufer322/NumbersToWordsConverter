@@ -1,8 +1,9 @@
 ﻿using Conversions;
+using Microsoft.Extensions.DependencyInjection;
 
 internal class InputLoop {
 
-    static readonly ISet<string> KEYWORDS_TO_END_LOOP = new HashSet<string> { "exit", "quit" };
+    private static readonly ISet<string> KEYWORDS_TO_END_LOOP = new HashSet<string> { "exit", "quit" };
 
     private static void Main() {
 
@@ -11,7 +12,7 @@ internal class InputLoop {
 
             while (!KEYWORDS_TO_END_LOOP.Contains(userInput)) {
                 // pass user input to converter
-                string convertedToWords = NumbersIntoWordsConverter.ConvertNumbersIntoWords(userInput);
+                string convertedToWords = NumberToWordsConverter.ConvertNumberIntoWords(userInput);
                 // present result of conversion to the user
                 Console.WriteLine(convertedToWords);
                 Console.WriteLine(string.Empty);

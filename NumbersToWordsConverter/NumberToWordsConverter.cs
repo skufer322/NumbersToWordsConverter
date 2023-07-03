@@ -2,7 +2,7 @@
 
 namespace Conversions {
 
-    internal partial class NumbersIntoWordsConverter {
+    internal partial class NumberToWordsConverter {
         // error strings / text format strings for exception messages
         static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL = "The given numbers string is null or empty.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given numbers string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
@@ -13,17 +13,13 @@ namespace Conversions {
         // constants 
         static readonly string SEPARATOR = ",";
         static readonly Regex REGEX_ALLOWED_CHARS = GenerateRegexForAllowedChars();
-        static readonly Regex REGEX_WHITESPACES = GenerateRegexForWhitespaces();
         static readonly int MAX_DIGITS_DOLLARS = 9;
         static readonly int MAX_DIGITS_CENTS = 2;
 
         [GeneratedRegex("^[0-9,\\s]+$")]
         private static partial Regex GenerateRegexForAllowedChars();
 
-        [GeneratedRegex("\\s")]
-        private static partial Regex GenerateRegexForWhitespaces();
-
-        public static string ConvertNumbersIntoWords(string? numbers) {
+        public static string ConvertNumberIntoWords(string? numbers) {
             // check for invalid inputs
             if (string.IsNullOrEmpty(numbers)) {
                 throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL);
@@ -41,21 +37,22 @@ namespace Conversions {
                 throw new ArgumentException(string.Format(EXC_MSG_TOO_MANY_SEPARATORS_TF, numbers, numberOfSeparators));
             }
 
-            string dollars = SanitizeNumber(RemoveWhitespaces(dollarsAndCents[0]));
+            // account for dollars
+            string dollars = SanitizeNumber(StringifiedNumberUtils.RemoveWhitespaces(dollarsAndCents[0]));
             if (dollars.Length > MAX_DIGITS_DOLLARS) {
                 throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_OF_DOLLARS_EXCEEDED_TF, dollars, new string(ConversionsConstants.CH_NINE, MAX_DIGITS_DOLLARS)));
             }
 
-            string words = ConvertNumberIntoWords(dollars);
-            words += GetCurrencyWordInCorrectCardinality(words, ConversionsConstants.DOLLAR, ConversionsConstants.DOLLARS);
+            string words = ConvertPreprocessedNumberIntoWords(dollars);
+            words += GetCurrencyFragmentWithCorrectCardinality(words, ConversionsConstants.DOLLAR, ConversionsConstants.DOLLARS);
             if (dollarsAndCents.Length == 2) {
                 // also account for cents
-                string cents = SanitizeNumber(HandleCentInputWithOnlyOneDigit(RemoveWhitespaces(dollarsAndCents[1])));
+                string cents = SanitizeNumber(HandleCentInputWithOnlyOneDigit(StringifiedNumberUtils.RemoveWhitespaces(dollarsAndCents[1])));
                 if (cents.Length > MAX_DIGITS_CENTS) {
                     throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_OF_CENTS_EXCEEDED_TF, cents, new string(ConversionsConstants.CH_NINE, MAX_DIGITS_CENTS)));
                 }
-                string centsAsWords = ConvertNumberIntoWords(cents);
-                centsAsWords += GetCurrencyWordInCorrectCardinality(centsAsWords, ConversionsConstants.CENT, ConversionsConstants.CENTS);
+                string centsAsWords = ConvertPreprocessedNumberIntoWords(cents);
+                centsAsWords += GetCurrencyFragmentWithCorrectCardinality(centsAsWords, ConversionsConstants.CENT, ConversionsConstants.CENTS);
                 words += " and " + centsAsWords; // TODO: schöner machen?
             }
 
@@ -70,11 +67,7 @@ namespace Conversions {
             return number.Length == MAX_DIGITS_CENTS ? number : number + ConversionsConstants.CH_ZERO;
         }
 
-        private static string RemoveWhitespaces(string number) {
-            return REGEX_WHITESPACES.Replace(number, string.Empty);
-        }
-
-        private static string ConvertNumberIntoWords(string number) {
+        private static string ConvertPreprocessedNumberIntoWords(string number) {
             string hundredsGroup = NumbersAsGroupsOf3Handler.GetHundredsGroup(number);
             string thousandsGroup = NumbersAsGroupsOf3Handler.GetThousandsGroup(number);
             string millionsGroup = NumbersAsGroupsOf3Handler.GetMillionsGroups(number);
@@ -83,16 +76,12 @@ namespace Conversions {
             string tgAsWord = NumbersAsGroupsOf3Handler.ConvertNumberGroupIntoWord(thousandsGroup);
             string mgAsWord = NumbersAsGroupsOf3Handler.ConvertNumberGroupIntoWord(millionsGroup);
 
-            return string.Format("{0}{1}{2}", GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
+            return string.Format("{0}{1}{2}", NumbersAsGroupsOf3Handler.GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), NumbersAsGroupsOf3Handler.GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
         }
 
-        private static string GetCurrencyWordInCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
-            string currencyInCorrectCardinality = numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural;
-            return string.Format(" {0}", currencyInCorrectCardinality);
-        }
-
-        private static string GetGroupFragment(string numberAsWords, string unit) {
-            return numberAsWords == string.Empty ? string.Empty : string.Format("{0} {1} ", numberAsWords, unit);
+        private static string GetCurrencyFragmentWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
+            string fragmentWithCorrectCardinality = numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural;
+            return string.Format(" {0}", fragmentWithCorrectCardinality);
         }
     }
 }
