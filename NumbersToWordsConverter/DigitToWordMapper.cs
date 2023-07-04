@@ -1,7 +1,7 @@
 ﻿namespace Conversions {
 
     internal interface IDigitToWordMapper {
-        string ConvertDigitIntoWord0to9(char digit, int numberOfDigitsInGroup);
+        string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup);
         string ConvertDigitIntoWordOfTens(char digit);
     }
 
@@ -13,7 +13,7 @@
         static readonly string FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS = "of single digit numbers";
         static readonly string FRAGMENT_TYPE_TENS = "of tens";
 
-        public string ConvertDigitIntoWord0to9(char digit, int numberOfDigitsInGroup) => digit switch {
+        public string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup) => digit switch {
             '0' => numberOfDigitsInGroup == 1 ? "zero" : string.Empty,
             '1' => ConversionsConstants.W_ONE,
             '2' => ConversionsConstants.W_TWO,

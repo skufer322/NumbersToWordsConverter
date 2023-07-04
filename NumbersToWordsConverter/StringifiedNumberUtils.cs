@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
 namespace Conversions {
+
     internal partial class StringifiedNumberUtils {
 
         static readonly Regex REGEX_WHITESPACES = GenerateRegexForWhitespaces();

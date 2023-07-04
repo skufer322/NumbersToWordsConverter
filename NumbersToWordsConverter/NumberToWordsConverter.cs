@@ -8,9 +8,9 @@ namespace Conversions {
 
     internal partial class NumberToWordsConverter : INumberToWordConverter {
         // error strings / text format strings for exception messages
-        static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL = "The given numbers string is null or empty.";
+        static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY = "The given numbers string is null or empty.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given numbers string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
-        static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given numbers string '{0}' ({1} separators), only 1 separator allowed at a max.";
+        static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given numbers string '{0}' ({1} separators), only 1 separator ('{2}') allowed at a max.";
         static readonly string EXC_MSG_MAX_NUMBER_OF_DOLLARS_EXCEEDED_TF = "The given number of dollars ('{0}') exceeds the allowed maximum number of dollars ('{1}').";
         static readonly string EXC_MSG_MAX_NUMBER_OF_CENTS_EXCEEDED_TF = "The given number of cents ('{0}') exceeds the allowed maximum number of cents ('{1}').";
 
@@ -33,7 +33,7 @@ namespace Conversions {
         public string ConvertNumberIntoWords(string? numbers) {
             // check for invalid inputs
             if (string.IsNullOrEmpty(numbers)) {
-                throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL);
+                throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY);
             }
             if (!REGEX_ALLOWED_CHARS.IsMatch(numbers)) {
                 throw new ArgumentException(string.Format(EXC_MSG_INVALID_CHARS_TF, numbers, SEPARATOR));
@@ -42,10 +42,10 @@ namespace Conversions {
             // split input into dollars and possibly cents
             string[] dollarsAndCents = numbers.Split(SEPARATOR);
 
-            // check if there are too many separators
             if (dollarsAndCents.Length > 2) {
+                // too many separators
                 int numberOfSeparators = dollarsAndCents.Length - 1;
-                throw new ArgumentException(string.Format(EXC_MSG_TOO_MANY_SEPARATORS_TF, numbers, numberOfSeparators));
+                throw new ArgumentException(string.Format(EXC_MSG_TOO_MANY_SEPARATORS_TF, numbers, numberOfSeparators, SEPARATOR));
             }
 
             // account for dollars
@@ -55,7 +55,7 @@ namespace Conversions {
             }
 
             string words = ConvertPreprocessedNumberIntoWords(dollars);
-            words += GetCurrencyFragmentWithCorrectCardinality(words, ConversionsConstants.DOLLAR, ConversionsConstants.DOLLARS);
+            words = AddCurrencyWithCorrectCardinality(words, ConversionsConstants.DOLLAR, ConversionsConstants.DOLLARS);
             if (dollarsAndCents.Length == 2) {
                 // also account for cents
                 string cents = SanitizeNumber(HandleCentInputWithOnlyOneDigit(StringifiedNumberUtils.RemoveWhitespaces(dollarsAndCents[1])));
@@ -63,8 +63,8 @@ namespace Conversions {
                     throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_OF_CENTS_EXCEEDED_TF, cents, new string(ConversionsConstants.CH_NINE, MAX_DIGITS_CENTS)));
                 }
                 string centsAsWords = ConvertPreprocessedNumberIntoWords(cents);
-                centsAsWords += GetCurrencyFragmentWithCorrectCardinality(centsAsWords, ConversionsConstants.CENT, ConversionsConstants.CENTS);
-                words += " and " + centsAsWords; // TODO: schöner machen?
+                centsAsWords = AddCurrencyWithCorrectCardinality(centsAsWords, ConversionsConstants.CENT, ConversionsConstants.CENTS);
+                words = string.Format("{0} and {1}", words, centsAsWords);
             }
 
             return words;
@@ -90,9 +90,8 @@ namespace Conversions {
             return string.Format("{0}{1}{2}", numberGroupsHandler.GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), numberGroupsHandler.GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
         }
 
-        private string GetCurrencyFragmentWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
-            string fragmentWithCorrectCardinality = numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural;
-            return string.Format(" {0}", fragmentWithCorrectCardinality);
+        private string AddCurrencyWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
+            return string.Format("{0} {1}", numberAsWords, numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural);
         }
     }
 }

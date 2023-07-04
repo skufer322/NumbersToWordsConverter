@@ -14,7 +14,7 @@ namespace Conversions {
         string GetGroupFragment(string numberAsWords, string unit);
     }
 
-    internal class NumbersAsGroupsOf3Handler : INumbersAsGroupsOf3Handler {
+    internal class NumberAsGroupsOf3Handler : INumbersAsGroupsOf3Handler {
 
         // text format strings for exception messages
         static readonly string EXC_MSG_GROUP_TOO_LARGE_TF = "The number group '{0}' has too many digits. The maximum number of digits in a group is {1}.";
@@ -26,7 +26,7 @@ namespace Conversions {
         // class members
         private IDigitToWordMapper wordMapper;
 
-        public NumbersAsGroupsOf3Handler(IDigitToWordMapper wordMapper) {
+        public NumberAsGroupsOf3Handler(IDigitToWordMapper wordMapper) {
             this.wordMapper = wordMapper;
         }
 
@@ -60,10 +60,10 @@ namespace Conversions {
             }
             char[] digits = numberGroup.ToCharArray();
             Array.Reverse(digits);
-            string lowestOrderDigitAsWordFragment = wordMapper.ConvertDigitIntoWord0to9(digits[0], digits.Length);
+            string lowestOrderDigitAsWordFragment = wordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[0], digits.Length);
             string connector = digits[0] == ConversionsConstants.CH_ZERO ? string.Empty : DASH_CONNECTOR;
             string middleOrderDigitAsWordFragment = digits.Length >= MAX_DIGITS_GROUP - 1 ? wordMapper.ConvertDigitIntoWordOfTens(digits[MAX_DIGITS_GROUP - 2]) + connector : string.Empty;
-            string highestOrderDigitAsWordFragment = digits.Length == MAX_DIGITS_GROUP ? GetGroupFragment(wordMapper.ConvertDigitIntoWord0to9(digits[MAX_DIGITS_GROUP - 1], digits.Length), ConversionsConstants.HUNDRED) : string.Empty;
+            string highestOrderDigitAsWordFragment = digits.Length == MAX_DIGITS_GROUP ? GetGroupFragment(wordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[MAX_DIGITS_GROUP - 1], digits.Length), ConversionsConstants.HUNDRED) : string.Empty;
             return string.Format("{0}{1}{2}", highestOrderDigitAsWordFragment, middleOrderDigitAsWordFragment, lowestOrderDigitAsWordFragment);
         }
 

@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal class InputLoop {
 
-    // set-up wiring of components
+    // wiring of components
     private static readonly ServiceProvider SERVICE_PROVIDER = new ServiceCollection()
             .AddSingleton<IDigitToWordMapper, DigitToWordMapper>()
-            .AddSingleton<INumbersAsGroupsOf3Handler, NumbersAsGroupsOf3Handler>()
+            .AddSingleton<INumbersAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
             .AddSingleton<INumberToWordConverter, NumberToWordsConverter>()
             .BuildServiceProvider();
 
@@ -19,7 +19,7 @@ internal class InputLoop {
 
             while (!KEYWORDS_TO_END_LOOP.Contains(userInput)) {
                 string numberConvertedToWords = converter.ConvertNumberIntoWords(userInput);
-                // present result of conversion to the user
+                // present result of the conversion to the user
                 Console.WriteLine(numberConvertedToWords);
                 Console.WriteLine(string.Empty);
                 
@@ -27,11 +27,11 @@ internal class InputLoop {
             }
         }
         catch (ArgumentException e) {
-            Console.WriteLine(string.Format("Sorry, you entered an invalid input. See error message for details:\n'{0}'\nPlease try again by restarting the program.", e.Message));
+            Console.WriteLine(string.Format("You entered an invalid input. See error message for details:\n'{0}'\nPlease try again by restarting the program.", e.Message));
         }
         catch (Exception e) {
             // unexpected error occurred
-            Console.WriteLine(string.Format("An unexpected error occurred:\n'{0}'\nPlease try again by restarting the program.", e));
+            Console.WriteLine(string.Format("Sorry, an unexpected error occurred:\n'{0}'\nPlease try again by restarting the program.", e));
         }
     }
 
