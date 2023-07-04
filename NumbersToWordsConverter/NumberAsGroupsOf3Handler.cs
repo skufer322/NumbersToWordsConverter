@@ -2,7 +2,7 @@
 
 namespace Conversions {
 
-    internal interface INumbersAsGroupsOf3Handler {
+    internal interface INumberAsGroupsOf3Handler {
         string GetHundredsGroup(string number);
 
         string GetThousandsGroup(string number);
@@ -14,7 +14,7 @@ namespace Conversions {
         string GetGroupFragment(string numberAsWords, string unit);
     }
 
-    internal class NumberAsGroupsOf3Handler : INumbersAsGroupsOf3Handler {
+    internal class NumberAsGroupsOf3Handler : INumberAsGroupsOf3Handler {
 
         // text format strings for exception messages
         static readonly string EXC_MSG_GROUP_TOO_LARGE_TF = "The number group '{0}' has too many digits. The maximum number of digits in a group is {1}.";

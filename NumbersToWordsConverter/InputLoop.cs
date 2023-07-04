@@ -6,8 +6,8 @@ internal class InputLoop {
     // wiring of components
     private static readonly ServiceProvider SERVICE_PROVIDER = new ServiceCollection()
             .AddSingleton<IDigitToWordMapper, DigitToWordMapper>()
-            .AddSingleton<INumbersAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
-            .AddSingleton<INumberToWordConverter, NumberToWordsConverter>()
+            .AddSingleton<INumberAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
+            .AddSingleton<INumberToWordsConverter, NumberToWordsConverter>()
             .BuildServiceProvider();
 
     private static readonly ISet<string> KEYWORDS_TO_END_LOOP = new HashSet<string> { "exit", "quit" };
@@ -15,7 +15,7 @@ internal class InputLoop {
     private static void Main() {
         try {
             string userInput = GetUserInput();
-            INumberToWordConverter converter = SERVICE_PROVIDER.GetRequiredService<INumberToWordConverter>();
+            INumberToWordsConverter converter = SERVICE_PROVIDER.GetRequiredService<INumberToWordsConverter>();
 
             while (!KEYWORDS_TO_END_LOOP.Contains(userInput)) {
                 string numberConvertedToWords = converter.ConvertNumberIntoWords(userInput);
