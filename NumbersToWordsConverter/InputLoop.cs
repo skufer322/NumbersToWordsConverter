@@ -5,7 +5,7 @@ internal class InputLoop {
 
     // wiring of components
     private static readonly ServiceProvider SERVICE_PROVIDER = new ServiceCollection()
-            .AddSingleton<IDigitToWordMapper, DigitToWordMapper>()
+            .AddSingleton<ToWordMapper, ToWordMapper>()
             .AddSingleton<INumberAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
             .AddSingleton<INumberToWordsConverter, NumberToWordsConverter>()
             .BuildServiceProvider();

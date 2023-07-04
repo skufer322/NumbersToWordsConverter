@@ -8,7 +8,7 @@ namespace Conversions {
 
     internal partial class NumberToWordsConverter : INumberToWordsConverter {
         // error strings / text format strings for exception messages
-        static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY = "The given number string is null or empty.";
+        static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY = "The given number string is null, empty, or only whitespace.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given number string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
         static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given number string '{0}' ({1} separators), only 1 separator ('{2}') allowed at a max.";
         static readonly string EXC_MSG_MAX_NUMBER_OF_DOLLARS_EXCEEDED_TF = "The given number of dollars ('{0}') exceeds the allowed maximum number of dollars ('{1}').";
@@ -24,7 +24,7 @@ namespace Conversions {
         private static partial Regex GenerateRegexForAllowedChars();
 
         // class members
-        private INumberAsGroupsOf3Handler numberAsGroupsHandler;
+        private readonly INumberAsGroupsOf3Handler numberAsGroupsHandler;
 
         public NumberToWordsConverter(INumberAsGroupsOf3Handler numberAsGroupsHandler) {
             this.numberAsGroupsHandler = numberAsGroupsHandler;
@@ -32,7 +32,7 @@ namespace Conversions {
 
         public string ConvertNumberIntoWords(string? number) {
             // check for invalid inputs
-            if (string.IsNullOrEmpty(number)) {
+            if (string.IsNullOrWhiteSpace(number)) {
                 throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY);
             }
             if (!REGEX_ALLOWED_CHARS.IsMatch(number)) {
@@ -53,7 +53,6 @@ namespace Conversions {
             if (dollars.Length > MAX_DIGITS_DOLLARS) {
                 throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_OF_DOLLARS_EXCEEDED_TF, dollars, new string(ConversionsConstants.CH_NINE, MAX_DIGITS_DOLLARS)));
             }
-
             string words = ConvertPreprocessedNumberIntoWords(dollars);
             words = AddCurrencyWithCorrectCardinality(words, ConversionsConstants.DOLLAR, ConversionsConstants.DOLLARS);
             if (dollarsAndCents.Length == 2) {
@@ -66,7 +65,6 @@ namespace Conversions {
                 centsAsWords = AddCurrencyWithCorrectCardinality(centsAsWords, ConversionsConstants.CENT, ConversionsConstants.CENTS);
                 words = string.Format("{0} and {1}", words, centsAsWords);
             }
-
             return words;
         }
 
@@ -75,7 +73,7 @@ namespace Conversions {
         }
 
         private string HandleCentInputWithOnlyOneDigit(string number) {
-            return number.Length == MAX_DIGITS_CENTS ? number : number + ConversionsConstants.CH_ZERO;
+            return number.Length == 1 ? number + ConversionsConstants.CH_ZERO : number;
         }
 
         private string ConvertPreprocessedNumberIntoWords(string number) {
