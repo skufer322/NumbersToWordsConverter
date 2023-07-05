@@ -3,13 +3,14 @@
 namespace Conversions {
 
     internal interface INumberAsGroupsOf3Handler {
+
         string GetHundredsGroup(string number);
 
         string GetThousandsGroup(string number);
 
-        string GetMillionsGroups(string number);
+        string GetMillionsGroup(string number);
 
-        string ConvertNumberGroupIntoWord(string numberGroup);
+        string ConvertNumberGroupIntoWords(string numberGroup);
 
         string GetGroupFragment(string numberAsWords, string unit);
     }
@@ -21,7 +22,7 @@ namespace Conversions {
 
         // constants
         static readonly int MAX_DIGITS_GROUP = 3;
-        static readonly string DASH_CONNECTOR = "-";
+        static readonly string WORD_CONNECTOR = "-";
 
         // class members
         private readonly ToWordMapper toWordMapper;
@@ -39,7 +40,7 @@ namespace Conversions {
             return number.Length > numberOfCharactersToRemoveFromEnd ? GetCharactersOfBackmostGroup(number[0..^numberOfCharactersToRemoveFromEnd]) : string.Empty;
         }
 
-        public string GetMillionsGroups(string number) {
+        public string GetMillionsGroup(string number) {
             int numberOfCharactersToRemoveFromEnd = MAX_DIGITS_GROUP * 2; // remove last 6 characters such that the millions are the backmost group of number 
             return number.Length > numberOfCharactersToRemoveFromEnd ? GetCharactersOfBackmostGroup(number[0..^numberOfCharactersToRemoveFromEnd]) : string.Empty;
         }
@@ -49,7 +50,7 @@ namespace Conversions {
             return number.Substring(Math.Max(0, numberOfDigits - MAX_DIGITS_GROUP), Math.Min(numberOfDigits, MAX_DIGITS_GROUP));
         }
 
-        public string ConvertNumberGroupIntoWord(string numberGroup) {
+        public string ConvertNumberGroupIntoWords(string numberGroup) {
             // sanity check
             if (numberGroup.Length > MAX_DIGITS_GROUP) {
                 throw new ArgumentException(string.Format(EXC_MSG_GROUP_TOO_LARGE_TF, numberGroup, MAX_DIGITS_GROUP));
@@ -58,7 +59,6 @@ namespace Conversions {
             if (numberGroup == string.Empty) {
                 return string.Empty;
             }
-
             // create words from digits
             char[] digits = numberGroup.ToCharArray();
             Array.Reverse(digits);
@@ -70,10 +70,10 @@ namespace Conversions {
         }
 
         private string RegularlyConstructMiddleAndLowestOrderDigitsWords(char[] digits) {
-            string lowestOrderDigitAsWordFragment = toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[0], digits.Length);
-            string connector = digits[0] == ConversionsConstants.CH_ZERO ? string.Empty : DASH_CONNECTOR;
-            string middleOrderDigitAsWordFragment = digits.Length >= MAX_DIGITS_GROUP - 1 ? toWordMapper.ConvertDigitIntoWordOfTenMultiples(digits[MAX_DIGITS_GROUP - 2]) + connector : string.Empty;
-            return string.Format("{0}{1}", middleOrderDigitAsWordFragment, lowestOrderDigitAsWordFragment);
+            string lowestOrderDigitAsWord = toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[0], digits.Length);
+            string connector = digits[0] == ConversionsConstants.CH_ZERO ? string.Empty : WORD_CONNECTOR;
+            string middleOrderDigitAsWord = digits.Length >= MAX_DIGITS_GROUP - 1 ? toWordMapper.ConvertDigitIntoWordOfTenMultiples(digits[MAX_DIGITS_GROUP - 2]) + connector : string.Empty;
+            return string.Format("{0}{1}", middleOrderDigitAsWord, lowestOrderDigitAsWord);
         }
 
         public string GetGroupFragment(string numberAsWords, string unit) {

@@ -1,6 +1,7 @@
 ﻿namespace Conversions {
 
     internal class ConversionsConstants {
+
         // selected digits as chars
         public static readonly char CH_ZERO = '0';
         public static readonly char CH_ONE = '1';
@@ -45,7 +46,7 @@
         public static readonly string THOUSAND = "thousand";
         public static readonly string MILLION = "million";
 
-        // currency units
+        // currency units (singular & plural)
         public static readonly string DOLLAR = "dollar";
         public static readonly string DOLLARS = "dollars";
         public static readonly string CENT = "cent";

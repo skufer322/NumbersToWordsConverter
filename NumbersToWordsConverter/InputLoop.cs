@@ -13,16 +13,15 @@ internal class InputLoop {
     private static readonly ISet<string> KEYWORDS_TO_END_LOOP = new HashSet<string> { "exit", "quit" };
 
     private static void Main() {
+        INumberToWordsConverter converter = SERVICE_PROVIDER.GetRequiredService<INumberToWordsConverter>();
         try {
             string userInput = GetUserInput();
-            INumberToWordsConverter converter = SERVICE_PROVIDER.GetRequiredService<INumberToWordsConverter>();
-
             while (!KEYWORDS_TO_END_LOOP.Contains(userInput)) {
                 string numberConvertedToWords = converter.ConvertNumberIntoWords(userInput);
                 // present result of the conversion to the user
                 Console.WriteLine(numberConvertedToWords);
                 Console.WriteLine(string.Empty);
-                
+                // get next round of user input
                 userInput = GetUserInput();
             }
         }

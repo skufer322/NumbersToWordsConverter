@@ -8,7 +8,7 @@ namespace Conversions {
 
     internal partial class NumberToWordsConverter : INumberToWordsConverter {
         // error strings / text format strings for exception messages
-        static readonly string EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY = "The given number string is null, empty, or only whitespace.";
+        static readonly string EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY = "The given number string is null, empty, or only whitespace.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given number string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
         static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given number string '{0}' ({1} separators), only 1 separator ('{2}') allowed at a max.";
         static readonly string EXC_MSG_MAX_NUMBER_OF_DOLLARS_EXCEEDED_TF = "The given number of dollars ('{0}') exceeds the allowed maximum number of dollars ('{1}').";
@@ -33,7 +33,7 @@ namespace Conversions {
         public string ConvertNumberIntoWords(string? number) {
             // check for invalid inputs
             if (string.IsNullOrWhiteSpace(number)) {
-                throw new ArgumentException(EXC_MSG_NUMBERS_STRING_IS_NULL_OR_EMPTY);
+                throw new ArgumentException(EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY);
             }
             if (!REGEX_ALLOWED_CHARS.IsMatch(number)) {
                 throw new ArgumentException(string.Format(EXC_MSG_INVALID_CHARS_TF, number, SEPARATOR));
@@ -72,24 +72,24 @@ namespace Conversions {
             return StringifiedNumberUtils.ReplaceEmptyStringWithZero(StringifiedNumberUtils.TrimLeadingZeros(number));
         }
 
-        private string HandleCentInputWithOnlyOneDigit(string number) {
-            return number.Length == 1 ? number + ConversionsConstants.CH_ZERO : number;
-        }
-
         private string ConvertPreprocessedNumberIntoWords(string number) {
             string hundredsGroup = numberAsGroupsHandler.GetHundredsGroup(number);
             string thousandsGroup = numberAsGroupsHandler.GetThousandsGroup(number);
-            string millionsGroup = numberAsGroupsHandler.GetMillionsGroups(number);
+            string millionsGroup = numberAsGroupsHandler.GetMillionsGroup(number);
 
-            string hgAsWord = numberAsGroupsHandler.ConvertNumberGroupIntoWord(hundredsGroup);
-            string tgAsWord = numberAsGroupsHandler.ConvertNumberGroupIntoWord(thousandsGroup);
-            string mgAsWord = numberAsGroupsHandler.ConvertNumberGroupIntoWord(millionsGroup);
+            string hgAsWords = numberAsGroupsHandler.ConvertNumberGroupIntoWords(hundredsGroup);
+            string tgAsWords = numberAsGroupsHandler.ConvertNumberGroupIntoWords(thousandsGroup);
+            string mgAsWords = numberAsGroupsHandler.ConvertNumberGroupIntoWords(millionsGroup);
 
-            return string.Format("{0}{1}{2}", numberAsGroupsHandler.GetGroupFragment(mgAsWord, ConversionsConstants.MILLION), numberAsGroupsHandler.GetGroupFragment(tgAsWord, ConversionsConstants.THOUSAND), hgAsWord);
+            return string.Format("{0}{1}{2}", numberAsGroupsHandler.GetGroupFragment(mgAsWords, ConversionsConstants.MILLION), numberAsGroupsHandler.GetGroupFragment(tgAsWords, ConversionsConstants.THOUSAND), hgAsWords);
         }
 
         private string AddCurrencyWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
             return string.Format("{0} {1}", numberAsWords, numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural);
+        }
+
+        private string HandleCentInputWithOnlyOneDigit(string number) {
+            return number.Length == 1 ? number + ConversionsConstants.CH_ZERO : number;
         }
     }
 }

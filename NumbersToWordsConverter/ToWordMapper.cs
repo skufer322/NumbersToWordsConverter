@@ -13,12 +13,12 @@ namespace Conversions {
 
     internal class ToWordMapper : IToWordMapper {
         // text format strings for exception messages
-        static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' to a word {1}. Only digits (from 0 to 9) can be converted.";
-        static readonly string EXC_MSG_NOT_A_SPECIAL_CASE_NUMBER = "The given number '{0}' is not a special case number which must be converted into a irregularly constructed word. Only numbers between '10' and '19' are special case numbers.";
+        static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' to a word of {1}. Only digits (from 0 to 9) can be converted.";
+        static readonly string EXC_MSG_NOT_A_SPECIAL_CASE_NUMBER = "The given number '{0}' is not a special case number which has to be converted into a irregularly constructed word. Only numbers between '10' and '19' are special case numbers.";
 
         // constants
-        static readonly string FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS = "of single digit numbers";
-        static readonly string FRAGMENT_TYPE_TENS = "of ten-multiples";
+        static readonly string FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS = "single digit numbers";
+        static readonly string FRAGMENT_TYPE_TENS = "ten-multiples";
 
         public string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup) => digit switch {
             '0' => numberOfDigitsInGroup == 1 ? "zero" : string.Empty,
@@ -49,7 +49,7 @@ namespace Conversions {
         };
 
         public string ConvertNumberIntoIrregularlyConstructedWord(string number) => number switch {
-            "10" => ConversionsConstants.W_TEN,
+            "10" => ConversionsConstants.W_TEN, // is actually not a irregularly constructed word, but is also treated here for convenience
             "11" => ConversionsConstants.W_ELEVEN,
             "12" => ConversionsConstants.W_TWELVE,
             "13" => ConversionsConstants.W_THIRTEEN,
