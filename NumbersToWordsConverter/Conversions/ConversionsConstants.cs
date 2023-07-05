@@ -35,7 +35,7 @@
         public static readonly string W_TWENTY = "twenty";
         public static readonly string W_THIRTY = "thirty";
         public static readonly string W_FOURTY = "fourty";
-        public static readonly string W_FIVETY = "fivety";
+        public static readonly string W_FIFTY = "fifty";
         public static readonly string W_SIXTY = "sixty";
         public static readonly string W_SEVENTY = "seventy";
         public static readonly string W_EIGHTY = "eighty";

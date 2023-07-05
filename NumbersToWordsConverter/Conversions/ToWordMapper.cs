@@ -38,7 +38,7 @@
             '2' => ConversionsConstants.W_TWENTY,
             '3' => ConversionsConstants.W_THIRTY,
             '4' => ConversionsConstants.W_FOURTY,
-            '5' => ConversionsConstants.W_FIVETY,
+            '5' => ConversionsConstants.W_FIFTY,
             '6' => ConversionsConstants.W_SIXTY,
             '7' => ConversionsConstants.W_SEVENTY,
             '8' => ConversionsConstants.W_EIGHTY,
