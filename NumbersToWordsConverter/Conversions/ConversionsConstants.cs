@@ -1,8 +1,11 @@
 ﻿namespace Conversions {
 
+    /// <summary>
+    /// Class holding constants used throughout the "Conversions" namespace. 
+    /// </summary>
     internal class ConversionsConstants {
 
-        // selected digits as chars
+        // digits as chars
         public static readonly char CH_ZERO = '0';
         public static readonly char CH_ONE = '1';
         public static readonly char CH_NINE = '9';

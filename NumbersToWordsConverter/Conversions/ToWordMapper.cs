@@ -1,14 +1,36 @@
 ﻿namespace Conversions {
 
+    /// <summary>
+    /// Interface defining the methods for implementations solving the problem of converting single digits into words of different scale or numbers into irregularly constructed words.
+    /// </summary>
     internal interface IToWordMapper {
 
+        /// <summary>
+        /// Converts the given digit into its word-based representation of a single digit number. If the digit '0' is passed and this '0' is part of number with more than one digit, an empty string is returned instead of the word "zero".
+        /// </summary>
+        /// <param name="digit">digit which is to be converted into its word-based representation of a single-digit number</param>
+        /// <param name="numberOfDigitsInGroup">amount of digits the number to be converted has</param>
+        /// <returns>word-based representation of a single digit number for the passed digit, or an empty string if the digit '0' was passed and the '0' is part of a number with more than one digit</returns>
         string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup);
 
+        /// <summary>
+        /// Converts the given digit into its word-based representation of a multiple of ten. If '0' is passed, an empty string is returned.
+        /// </summary>
+        /// <param name="digit">digit which is to be converted into its word-based representation of a multiple of ten</param>
+        /// <returns>word-based representation as a word of ten for the passed digit, or an empty string if '0' has been passed</returns>
         string ConvertDigitIntoWordOfTenMultiples(char digit);
 
+        /// <summary>
+        /// Converts the given number string into its irregularly constructed word-based representation. Only the words for the numbers "10" to "19" are irregularly constructed, other inputs will lead to an <see cref="ArgumentException"/>.
+        /// </summary>
+        /// <param name="number">number string which is to be connverted into its irregularly constructed word-based representation</param>
+        /// <returns>irregularly constructed word-based representation of the given number string</returns>
         string ConvertNumberIntoIrregularlyConstructedWord(string number);
     }
 
+    /// <summary>
+    /// Implementation of <see cref="IToWordMapper"/>.
+    /// </summary>
     internal class ToWordMapper : IToWordMapper {
         // text format strings for exception messages
         static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' to a word of {1}. Only digits (from 0 to 9) can be converted.";

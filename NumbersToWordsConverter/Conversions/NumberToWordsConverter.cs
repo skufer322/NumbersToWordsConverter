@@ -2,10 +2,23 @@
 
 namespace Conversions {
 
+    /// <summary>
+    /// Interface defining the methods for implementations solving the problem of converting a number of a currency (dollars) into its word-based representation (natural language).
+    /// </summary>
     internal interface INumberToWordsConverter {
+
+        /// <summary>
+        /// Converts the given number of a currency (dollars) into its word-based representation (natural language). The number can be of dollars and cents (separated by a separator symbol), or only of dollars (no separator).
+        /// </summary>
+        /// <param name="number">number to convert into its word-based representation</param>
+        /// <returns>word-based representation of the given number</returns>
+        /// <exception cref="ArgumentException">if the given number string contains invalid symbols (allowed symbols are digits, one optional separator, and whitespaces)</exception>
         string ConvertNumberIntoWords(string? number);
     }
 
+    /// <summary>
+    /// Implementation of <see cref="INumberToWordsConverter"/>.
+    /// </summary>
     internal partial class NumberToWordsConverter : INumberToWordsConverter {
         // error strings / text format strings for exception messages
         static readonly string EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY = "The given number string is null, empty, or only whitespace.";

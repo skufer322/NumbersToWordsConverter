@@ -1,18 +1,53 @@
 ﻿namespace Conversions {
 
+    /// <summary>
+    /// Interface defining the methods for handling numbers given as strings as groups of 3, nine digits at a max (i.e. millions, thousands, and hundreds), and converting a group into its word-based representation.
+    /// </summary>
     internal interface INumberAsGroupsOf3Handler {
 
+        /// <summary>
+        /// From the given number string, returns the group of the three least significant digits (the "hundreds group").
+        /// For example, if "123456789" is passed, "789" will be returned. If "12" is passed, "12" will be returned.
+        /// </summary>
+        /// <param name="number">number string from which the hundreds group is to be extracted</param>
+        /// <returns>number string from which the hundreds group has been extracted</returns>
         string GetHundredsGroup(string number);
 
+        /// <summary>
+        /// From the given number string, returns the group of the four to six least significant digits (the "thousands group").
+        /// For example, if "123456789" is passed, "456" will be returned. If "56789 is passed, "56" will be returned. If "789" is passed, an empty string will be returned (as there is no thousands group).
+        /// </summary>
+        /// <param name="number">number string from which the thousands group is to be extracted</param>
+        /// <returns>number string from which the thousands group has been extracted, or an empty string if there is no thousands group</returns>
         string GetThousandsGroup(string number);
 
+        /// <summary>
+        /// From the given number string, returns the group of the seven to nine least significant digits (the "millions group").
+        /// For example, if "123456789" is passed, "123" will be returned. If "23456789" is passed, "23" will be returned. If "456789" is passed, an empty string will be returned (as there is no millions group).
+        /// </summary>
+        /// <param name="number">number string from which the millions group is to be extracted</param>
+        /// <returns>number string from which the millions group has been extracted, or an empty string if there is no millions group</returns>
         string GetMillionsGroup(string number);
 
+        /// <summary>
+        /// Converts the given number group of up to three digits into its word-based representation (natural language).
+        /// </summary>
+        /// <param name="numberGroup">number group which is to be converted into its word-based representation</param>
+        /// <returns>number group which has been converted into its word-based representation</returns>
         string ConvertNumberGroupIntoWords(string numberGroup);
 
+        /// <summary>
+        /// Returns the correctly converted "group fragment", consisting of the word-based represenation of a number group and its unit (e.g. "million").
+        /// </summary>
+        /// <param name="numberAsWords">word-based representation of the number group for which the word group fragment is to be created</param>
+        /// <param name="unit">unit of the number group for which the word group fragment is to be created</param>
+        /// <returns>correctly formatted group fragment of the word-based represenation of a number group and its unit</returns>
         string GetGroupFragment(string numberAsWords, string unit);
     }
 
+    /// <summary>
+    /// Implementation of <see cref="INumberAsGroupsOf3Handler"/>.
+    /// </summary>
     internal class NumberAsGroupsOf3Handler : INumberAsGroupsOf3Handler {
 
         // text format strings for exception messages
