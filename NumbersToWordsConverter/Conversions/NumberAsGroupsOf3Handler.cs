@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Conversions {
+﻿namespace Conversions {
 
     internal interface INumberAsGroupsOf3Handler {
 
@@ -25,9 +23,9 @@ namespace Conversions {
         static readonly string WORD_CONNECTOR = "-";
 
         // class members
-        private readonly ToWordMapper toWordMapper;
+        private readonly IToWordMapper toWordMapper;
 
-        public NumberAsGroupsOf3Handler(ToWordMapper toWordMapper) {
+        public NumberAsGroupsOf3Handler(IToWordMapper toWordMapper) {
             this.toWordMapper = toWordMapper;
         }
 
@@ -62,7 +60,7 @@ namespace Conversions {
             // create words from digits
             char[] digits = numberGroup.ToCharArray();
             Array.Reverse(digits);
-            string middleAndLowestOrderDigitsAsWords = (digits.Length >= 2 && digits[1] == ConversionsConstants.CH_ONE) // check for special cases 10 to 19
+            string middleAndLowestOrderDigitsAsWords = digits.Length >= 2 && digits[1] == ConversionsConstants.CH_ONE // check for special cases 10 to 19
                 ? toWordMapper.ConvertNumberIntoIrregularlyConstructedWord(numberGroup[^2..]) // special treatment for special cases
                 : RegularlyConstructMiddleAndLowestOrderDigitsWords(digits); // regular treatment for non-special cases
             string highestOrderDigitAsWords = digits.Length == MAX_DIGITS_GROUP ? GetGroupFragment(toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[MAX_DIGITS_GROUP - 1], digits.Length), ConversionsConstants.HUNDRED) : string.Empty;

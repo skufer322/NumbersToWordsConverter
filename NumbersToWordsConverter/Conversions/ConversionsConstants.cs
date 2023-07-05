@@ -21,7 +21,7 @@
 
         // words for numbers 11 to 19
         public static readonly string W_ELEVEN = "eleven";
-        public static readonly string W_TWELVE= "twelve";
+        public static readonly string W_TWELVE = "twelve";
         public static readonly string W_THIRTEEN = "thirteen";
         public static readonly string W_FOURTEEN = "fourteen";
         public static readonly string W_FIFTEEN = "fifteen";

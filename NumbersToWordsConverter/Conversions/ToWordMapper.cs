@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Conversions {
+﻿namespace Conversions {
 
     internal interface IToWordMapper {
 
@@ -8,7 +6,7 @@ namespace Conversions {
 
         string ConvertDigitIntoWordOfTenMultiples(char digit);
 
-        string ConvertNumberIntoIrregularlyConstructedWord(string number); 
+        string ConvertNumberIntoIrregularlyConstructedWord(string number);
     }
 
     internal class ToWordMapper : IToWordMapper {
@@ -49,7 +47,7 @@ namespace Conversions {
         };
 
         public string ConvertNumberIntoIrregularlyConstructedWord(string number) => number switch {
-            "10" => ConversionsConstants.W_TEN, // is actually not a irregularly constructed word, but is also treated here for convenience
+            "10" => ConversionsConstants.W_TEN, // is actually not a irregularly constructed word, but is handled here for convenience
             "11" => ConversionsConstants.W_ELEVEN,
             "12" => ConversionsConstants.W_TWELVE,
             "13" => ConversionsConstants.W_THIRTEEN,

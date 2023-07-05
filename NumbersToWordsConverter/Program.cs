@@ -1,11 +1,11 @@
 ﻿using Conversions;
 using Microsoft.Extensions.DependencyInjection;
 
-internal class InputLoop {
+internal class Program {
 
     // wiring of components
     private static readonly ServiceProvider SERVICE_PROVIDER = new ServiceCollection()
-            .AddSingleton<ToWordMapper, ToWordMapper>()
+            .AddSingleton<IToWordMapper, ToWordMapper>()
             .AddSingleton<INumberAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
             .AddSingleton<INumberToWordsConverter, NumberToWordsConverter>()
             .BuildServiceProvider();
