@@ -1,4 +1,5 @@
 ﻿using Conversions;
+using ConverterProgram.Conversions;
 using Microsoft.Extensions.DependencyInjection;
 
 internal class Program {
@@ -7,6 +8,8 @@ internal class Program {
     private static readonly ServiceProvider SERVICE_PROVIDER = new ServiceCollection()
             .AddSingleton<IToWordMapper, ToWordMapper>()
             .AddSingleton<INumberAsGroupsOf3Handler, NumberAsGroupsOf3Handler>()
+            .AddSingleton<IInputHandler, InputHandler>()
+            .AddSingleton<ACurrencyHandler, DollarHandler>()
             .AddSingleton<INumberToWordsConverter, NumberToWordsConverter>()
             .BuildServiceProvider();
 
@@ -26,7 +29,7 @@ internal class Program {
             }
         }
         catch (ArgumentException e) {
-            Console.WriteLine(string.Format("You entered an invalid input. See error message for details:\n'{0}'\nPlease try again by restarting the program.", e.Message));
+            Console.WriteLine(string.Format("You entered an invalid input. See the error message for details:\n'{0}'\nPlease try again by restarting the program.", e.Message));
         }
         catch (Exception e) {
             // unexpected error occurred

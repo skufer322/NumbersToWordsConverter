@@ -27,7 +27,7 @@ namespace Conversions {
         /// <param name="number">number string from which all possible leading zeros are to be removed</param>
         /// <returns>number string from which all possible leading zeros have been removed</returns>
         public static string TrimLeadingZeros(string number) {
-            return number.TrimStart(ConversionsConstants.CH_ZERO);
+            return number.TrimStart(ConversionsConstants.CH_0);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Conversions {
         /// <param name="number">number string which is to be replaced with "0" if it is empty</param>
         /// <returns>"0" if the given number string is empty, else the unchanged number string</returns>
         public static string ReplaceEmptyStringWithZero(string number) {
-            return number == string.Empty ? char.ToString(ConversionsConstants.CH_ZERO) : number;
+            return number == string.Empty ? char.ToString(ConversionsConstants.CH_0) : number;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Conversions {
 
     /// <summary>
-    /// Interface defining the methods for handling numbers given as strings as groups of 3, nine digits at a max (i.e. millions, thousands, and hundreds), and converting a group into its word-based representation.
+    /// Interface defining the methods for handling numbers given as strings in groups of 3, nine digits at a max (i.e. millions, thousands, and hundreds), and converting a group into its word-based representation.
     /// </summary>
     internal interface INumberAsGroupsOf3Handler {
 
@@ -10,7 +10,7 @@
         /// For example, if "123456789" is passed, "789" will be returned. If "12" is passed, "12" will be returned.
         /// </summary>
         /// <param name="number">number string from which the hundreds group is to be extracted</param>
-        /// <returns>number string from which the hundreds group has been extracted</returns>
+        /// <returns>hundreds group of the number string</returns>
         string GetHundredsGroup(string number);
 
         /// <summary>
@@ -18,7 +18,7 @@
         /// For example, if "123456789" is passed, "456" will be returned. If "56789 is passed, "56" will be returned. If "789" is passed, an empty string will be returned (as there is no thousands group).
         /// </summary>
         /// <param name="number">number string from which the thousands group is to be extracted</param>
-        /// <returns>number string from which the thousands group has been extracted, or an empty string if there is no thousands group</returns>
+        /// <returns>thousands group of the number string, or an empty string if there is no thousands group</returns>
         string GetThousandsGroup(string number);
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// For example, if "123456789" is passed, "123" will be returned. If "23456789" is passed, "23" will be returned. If "456789" is passed, an empty string will be returned (as there is no millions group).
         /// </summary>
         /// <param name="number">number string from which the millions group is to be extracted</param>
-        /// <returns>number string from which the millions group has been extracted, or an empty string if there is no millions group</returns>
+        /// <returns>millions group of the number string, or an empty string if there is no millions group</returns>
         string GetMillionsGroup(string number);
 
         /// <summary>
@@ -34,15 +34,17 @@
         /// </summary>
         /// <param name="numberGroup">number group which is to be converted into its word-based representation</param>
         /// <returns>number group which has been converted into its word-based representation</returns>
+        /// <exception cref="ArgumentException">if the given group has a length greater than 3</exception>
         string ConvertNumberGroupIntoWords(string numberGroup);
 
         /// <summary>
-        /// Returns the correctly converted "group fragment", consisting of the word-based represenation of a number group and its unit (e.g. "million").
+        /// Returns the correctly formatted "group fragment", consisting of the word-based represenation of a number group and its scale (e.g. "million").
         /// </summary>
         /// <param name="numberAsWords">word-based representation of the number group for which the word group fragment is to be created</param>
-        /// <param name="unit">unit of the number group for which the word group fragment is to be created</param>
-        /// <returns>correctly formatted group fragment of the word-based represenation of a number group and its unit</returns>
-        string GetGroupFragment(string numberAsWords, string unit);
+        /// <param name="scale">scale of the number group for which the word group fragment is to be created</param>
+        /// <param name="isWithSpaceAtFragmentEnd">whether the group fragment shall have a space character as its last character, or not</param>
+        /// <returns>correctly formatted group fragment of the word-based represenation of a number group and its scale</returns>
+        string GetGroupFragment(string numberAsWords, string scale, bool isWithSpaceAtFragmentEnd);
     }
 
     /// <summary>
@@ -95,22 +97,24 @@
             // create words from digits
             char[] digits = numberGroup.ToCharArray();
             Array.Reverse(digits);
-            string middleAndLowestOrderDigitsAsWords = digits.Length >= 2 && digits[1] == ConversionsConstants.CH_ONE // check for special cases 10 to 19
+            string middleAndLowestOrderDigitsAsWords = (digits.Length >= 2 && digits[1] == ConversionsConstants.CH_1) // check for special cases 10 to 19
                 ? toWordMapper.ConvertNumberIntoIrregularlyConstructedWord(numberGroup[^2..]) // special treatment for special cases
                 : RegularlyConstructMiddleAndLowestOrderDigitsWords(digits); // regular treatment for non-special cases
-            string highestOrderDigitAsWords = digits.Length == MAX_DIGITS_GROUP ? GetGroupFragment(toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[MAX_DIGITS_GROUP - 1], digits.Length), ConversionsConstants.HUNDRED) : string.Empty;
+            string highestOrderDigitAsWords = (digits.Length == MAX_DIGITS_GROUP)
+                ? GetGroupFragment(toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[MAX_DIGITS_GROUP - 1], digits.Length), ConversionsConstants.HUNDRED, middleAndLowestOrderDigitsAsWords != string.Empty)
+                : string.Empty;
             return string.Format("{0}{1}", highestOrderDigitAsWords, middleAndLowestOrderDigitsAsWords);
         }
 
         private string RegularlyConstructMiddleAndLowestOrderDigitsWords(char[] digits) {
             string lowestOrderDigitAsWord = toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[0], digits.Length);
-            string connector = digits[0] == ConversionsConstants.CH_ZERO ? string.Empty : WORD_CONNECTOR;
+            string connector = digits[0] == ConversionsConstants.CH_0 ? string.Empty : WORD_CONNECTOR;
             string middleOrderDigitAsWord = digits.Length >= MAX_DIGITS_GROUP - 1 ? toWordMapper.ConvertDigitIntoWordOfTenMultiples(digits[MAX_DIGITS_GROUP - 2]) + connector : string.Empty;
             return string.Format("{0}{1}", middleOrderDigitAsWord, lowestOrderDigitAsWord);
         }
 
-        public string GetGroupFragment(string numberAsWords, string unit) {
-            return numberAsWords == string.Empty ? string.Empty : string.Format("{0} {1} ", numberAsWords, unit);
+        public string GetGroupFragment(string numberAsWords, string scale, bool isWithSpaceAtFragmentEnd) {
+            return numberAsWords == string.Empty ? string.Empty : string.Format("{0} {1}{2}", numberAsWords, scale, isWithSpaceAtFragmentEnd ? " " : string.Empty);
         }
     }
 }
