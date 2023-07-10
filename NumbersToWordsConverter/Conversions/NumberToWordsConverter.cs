@@ -27,10 +27,8 @@
         }
 
         public string ConvertNumberIntoWords(string? number) {
-            string[] unitsAndSubunits = inputHandler.ProcessUserInput(number);
-            string units = unitsAndSubunits[0];
-            string? subunits = unitsAndSubunits.Length == 2 ? unitsAndSubunits[1] : null;
-            return currencyHandler.ConvertCurrencyToWords(units, subunits);
+            Tuple<string, string?> unitsAndSubunits = inputHandler.ProcessUserInput(number);
+            return currencyHandler.ConvertCurrencyToWords(unitsAndSubunits.Item1, unitsAndSubunits.Item2);
         }
     }
 }

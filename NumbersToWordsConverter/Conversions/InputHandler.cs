@@ -18,9 +18,9 @@ namespace Conversions {
         /// </list>
         /// </summary>
         /// <param name="number">number string to be processed (checked for validity, split into unit and possibly subunit, both being sanitized for further processing)</param>
-        /// <returns>array containing sanitized unit (index 0) and possibly subunit numbers (index 1)</returns>
+        /// <returns>tuple containing sanitized unit (item 1) and possibly subunit (item 2) numbers</returns>
         /// <exception cref="ArgumentException">if the given number string is invalid or contains invalid symbols (allowed symbols are digits, one optional separator, and whitespaces)</exception>
-        string[] ProcessUserInput(string? number);
+        Tuple<string, string?> ProcessUserInput(string? number);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace Conversions {
         [GeneratedRegex("^[0-9,\\s]+$")]
         private static partial Regex GenerateRegexForAllowedChars();
 
-        public string[] ProcessUserInput(string? number) {
+        public Tuple<string, string?> ProcessUserInput(string? number) {
             // check for invalid inputs
             if (string.IsNullOrWhiteSpace(number)) {
                 throw new ArgumentException(EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY_OR_ONLY_WHITESPACE);
@@ -57,7 +57,7 @@ namespace Conversions {
             }
             string sanitizedUnits = SanitizeNumber(StringifiedNumberUtils.RemoveWhitespaces(unitsAndSubunits[0]));
             string? sanitizedSubunits = unitsAndSubunits.Length == 2 ? SanitizeNumber(SpecialHandlingForSubunitInput(StringifiedNumberUtils.RemoveWhitespaces(unitsAndSubunits[1]))) : null;
-            return sanitizedSubunits == null ? new string[] { sanitizedUnits } : new string[] { sanitizedUnits, sanitizedSubunits };
+            return new Tuple<string, string?>(sanitizedUnits, sanitizedSubunits);
         }
 
         private string SanitizeNumber(string number) {
