@@ -1,7 +1,7 @@
 ﻿namespace Conversions {
 
     /// <summary>
-    /// Interface defining the methods for handling numbers given as strings in groups of 3, nine digits at a max (i.e. millions, thousands, and hundreds), and converting a group into its word-based representation.
+    /// Interface defining the methods for handling a number given as string in groups of 3, nine digits at a max (i.e. millions, thousands, and hundreds), and converting a group into its word-based representation.
     /// </summary>
     internal interface INumberAsGroupsOf3Handler {
 

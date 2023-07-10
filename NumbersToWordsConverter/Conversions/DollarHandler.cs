@@ -20,7 +20,7 @@
         /// <param name="units">number-based representation of the currency's units to be converted into its word-based representation</param>
         /// <param name="subunits">optional number-based representation of the currency's subunits to be converted into its word-based representation (pass null if there are not subunits)</param>
         /// <returns>word-based representation of the currency's units and possibly subunits</returns>
-        /// <exception cref="ArgumentException">if the number of units is greater than 999,999,999 and the number of subunits is greater than 99</exception>
+        /// <exception cref="ArgumentException">if the number of units is greater than 999,999,999 or the number of subunits is greater than 99</exception>
         public string ConvertCurrencyToWords(string units, string? subunits) {
             if (units.Length > ConversionsConstants.MAX_DIGITS_UNIT) {
                 throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_EXCEEDED_TF, GetUnitsName(), units, new string(ConversionsConstants.CH_9, ConversionsConstants.MAX_DIGITS_UNIT)));
