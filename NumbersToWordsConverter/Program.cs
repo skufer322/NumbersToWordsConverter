@@ -1,5 +1,4 @@
 ﻿using Conversions;
-using ConverterProgram.Conversions;
 using Microsoft.Extensions.DependencyInjection;
 
 internal class Program {

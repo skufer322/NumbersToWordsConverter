@@ -109,7 +109,7 @@
         private string RegularlyConstructMiddleAndLowestOrderDigitsWords(char[] digits) {
             string lowestOrderDigitAsWord = toWordMapper.ConvertDigitIntoWordOfSingleDigitNumbers(digits[0], digits.Length);
             string connector = digits[0] == ConversionsConstants.CH_0 ? string.Empty : WORD_CONNECTOR;
-            string middleOrderDigitAsWord = digits.Length >= MAX_DIGITS_GROUP - 1 ? toWordMapper.ConvertDigitIntoWordOfTenMultiples(digits[MAX_DIGITS_GROUP - 2]) + connector : string.Empty;
+            string middleOrderDigitAsWord = digits.Length >= 2 ? toWordMapper.ConvertDigitIntoWordOfTenMultiples(digits[1]) + connector : string.Empty;
             return string.Format("{0}{1}", middleOrderDigitAsWord, lowestOrderDigitAsWord);
         }
 

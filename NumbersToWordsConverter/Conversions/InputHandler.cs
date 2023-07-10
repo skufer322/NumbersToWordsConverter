@@ -1,7 +1,6 @@
-﻿using Conversions;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-namespace ConverterProgram.Conversions {
+namespace Conversions {
 
     /// <summary>
     /// Interface defining the methods for user input handlers.
@@ -15,21 +14,21 @@ namespace ConverterProgram.Conversions {
         /// <item><description>remove leading zeros of a number</description></item>
         /// <item><description>replace an empty string with "0"</description></item>
         /// <item><description>remove any whitespaces</description></item>
-        /// <item><description>for one digit subunit numbers, an '0' is appended (e.g. "1" turns to "10")</description></item>
+        /// <item><description>for one-digit subunit numbers, an '0' is appended (e.g. "1" turns to "10")</description></item>
         /// </list>
         /// </summary>
         /// <param name="number">number string to be processed (checked for validity, split into unit and possibly subunit, both being sanitized for further processing)</param>
-        /// <returns>sanitized unit and possibly subunit numbers</returns>
+        /// <returns>array containing sanitized unit (index 0) and possibly subunit numbers (index 1)</returns>
         /// <exception cref="ArgumentException">if the given number string is invalid or contains invalid symbols (allowed symbols are digits, one optional separator, and whitespaces)</exception>
         string[] ProcessUserInput(string? number);
     }
 
     /// <summary>
-    /// Implementation of<see cref="IInputHandler"/>.
+    /// Implementation of <see cref="IInputHandler"/>.
     /// </summary>
     internal partial class InputHandler : IInputHandler {
         // error strings / text format strings for exception messages
-        static readonly string EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY = "The given number string is null, empty, or only whitespace.";
+        static readonly string EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY_OR_ONLY_WHITESPACE = "The given number string is null, empty, or only whitespace.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given number string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
         static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given number string '{0}' ({1} separators), only 1 separator ('{2}') allowed at a max.";
         static readonly string EXC_MSG_TOO_MANY_DIGITS_FOR_SUBUNIT_TF = "The given subunit number ('{0}') has too many digits ({1}). Only {2} digits are allowed at a max.";
@@ -44,7 +43,7 @@ namespace ConverterProgram.Conversions {
         public string[] ProcessUserInput(string? number) {
             // check for invalid inputs
             if (string.IsNullOrWhiteSpace(number)) {
-                throw new ArgumentException(EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY);
+                throw new ArgumentException(EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY_OR_ONLY_WHITESPACE);
             }
             if (!REGEX_ALLOWED_CHARS.IsMatch(number)) {
                 throw new ArgumentException(string.Format(EXC_MSG_INVALID_CHARS_TF, number, SEPARATOR));
@@ -57,7 +56,7 @@ namespace ConverterProgram.Conversions {
                 throw new ArgumentException(string.Format(EXC_MSG_TOO_MANY_SEPARATORS_TF, number, numberOfSeparators, SEPARATOR));
             }
             string sanitizedUnits = SanitizeNumber(StringifiedNumberUtils.RemoveWhitespaces(unitsAndSubunits[0]));
-            string? sanitizedSubunits = unitsAndSubunits.Length == 1 ? null : SanitizeNumber(SpecialHandlingForSubunitInput(StringifiedNumberUtils.RemoveWhitespaces(unitsAndSubunits[1])));
+            string? sanitizedSubunits = unitsAndSubunits.Length == 2 ? SanitizeNumber(SpecialHandlingForSubunitInput(StringifiedNumberUtils.RemoveWhitespaces(unitsAndSubunits[1]))) : null;
             return sanitizedSubunits == null ? new string[] { sanitizedUnits } : new string[] { sanitizedUnits, sanitizedSubunits };
         }
 

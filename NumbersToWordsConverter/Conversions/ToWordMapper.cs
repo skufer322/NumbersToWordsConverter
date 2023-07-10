@@ -36,12 +36,12 @@
     /// </summary>
     internal class ToWordMapper : IToWordMapper {
         // text format strings for exception messages
-        static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' to a word of {1}. Only digits (from 0 to 9) can be converted.";
+        static readonly string EXC_MSG_CHAR_IS_NOT_A_DIGIT = "Cannot convert the given char '{0}' into a word of {1}. Only digits (from '0' to '9') can be converted.";
         static readonly string EXC_MSG_NOT_A_SPECIAL_CASE_NUMBER = "The given number '{0}' is not a special case number which has to be converted into a irregularly constructed word. Only numbers between '10' and '19' are special case numbers.";
 
         // constants
         static readonly string FRAGMENT_TYPE_SINGLE_DIGIT_NUMBERS = "single digit numbers";
-        static readonly string FRAGMENT_TYPE_TENS = "ten-multiples";
+        static readonly string FRAGMENT_TYPE_TEN_MULTIPLES = "ten-multiples";
 
         public string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup) => digit switch {
             ConversionsConstants.CH_0 => numberOfDigitsInGroup == 1 ? ConversionsConstants.W_ZERO : string.Empty,
@@ -68,7 +68,7 @@
             ConversionsConstants.CH_7 => ConversionsConstants.W_SEVENTY,
             ConversionsConstants.CH_8 => ConversionsConstants.W_EIGHTY,
             ConversionsConstants.CH_9 => ConversionsConstants.W_NINETY,
-            _ => throw new ArgumentException(string.Format(EXC_MSG_CHAR_IS_NOT_A_DIGIT, digit, FRAGMENT_TYPE_TENS))
+            _ => throw new ArgumentException(string.Format(EXC_MSG_CHAR_IS_NOT_A_DIGIT, digit, FRAGMENT_TYPE_TEN_MULTIPLES))
         };
 
         public string ConvertNumberIntoIrregularlyConstructedWord(string number) => number switch {

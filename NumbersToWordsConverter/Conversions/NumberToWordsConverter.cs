@@ -1,6 +1,4 @@
-﻿using ConverterProgram.Conversions;
-
-namespace Conversions {
+﻿namespace Conversions {
 
     /// <summary>
     /// Interface defining the methods for implementations solving the problem of converting a number-based representation of a currency into its word-based representation (natural language).
@@ -18,7 +16,7 @@ namespace Conversions {
     /// <summary>
     /// Implementation of <see cref="INumberToWordsConverter"/>.
     /// </summary>
-    internal partial class NumberToWordsConverter : INumberToWordsConverter {
+    internal class NumberToWordsConverter : INumberToWordsConverter {
 
         private readonly IInputHandler inputHandler;
         private readonly ACurrencyHandler currencyHandler;
@@ -31,7 +29,7 @@ namespace Conversions {
         public string ConvertNumberIntoWords(string? number) {
             string[] unitsAndSubunits = inputHandler.ProcessUserInput(number);
             string units = unitsAndSubunits[0];
-            string? subunits = unitsAndSubunits.Length == 1 ? null : unitsAndSubunits[1];
+            string? subunits = unitsAndSubunits.Length == 2 ? unitsAndSubunits[1] : null;
             return currencyHandler.ConvertCurrencyToWords(units, subunits);
         }
     }
