@@ -1,7 +1,7 @@
 ﻿namespace Conversions {
 
     /// <summary>
-    /// Abstract class implementing most of the methods for converting a number-based representation of a currency of units and possibly subunits into a word-based representation (natural language).
+    /// Abstract class implementing most of the methods for converting a number-based representation of a currency of units and possibly subunits into a word-based representation.
     /// For a concrete currency, an instantiable subclasses must be implemented which determines the names of the units and subunits.
     /// </summary>
     internal abstract class ACurrencyHandler {
@@ -15,7 +15,7 @@
         }
 
         /// <summary>
-        /// Converts the currency's number-based representation of units and possibly subunits into its word-based representation (natural language).
+        /// Converts the currency's number-based representation of units and possibly subunits into its word-based representation.
         /// </summary>
         /// <param name="units">number-based representation of the currency's units to be converted into its word-based representation</param>
         /// <param name="subunits">optional number-based representation of the currency's subunits to be converted into its word-based representation (pass null if there are not subunits)</param>
@@ -27,14 +27,14 @@
             }
             // account for units
             string words = ConvertNumberIntoWords(units);
-            words = AddCurrencyWithCorrectCardinality(words, GetUnitName(), GetUnitsName());
+            words = AddCurrencyNameWithCorrectCardinality(words, GetUnitName(), GetUnitsName());
             if (subunits != null) {
                 // also account for subunits
                 if (subunits.Length > ConversionsConstants.MAX_DIGITS_SUBUNIT) {
                     throw new ArgumentException(string.Format(EXC_MSG_MAX_NUMBER_EXCEEDED_TF, GetSubunitsName(), subunits, new string(ConversionsConstants.CH_9, ConversionsConstants.MAX_DIGITS_SUBUNIT)));
                 }
                 string subunitsAsWords = ConvertNumberIntoWords(subunits);
-                subunitsAsWords = AddCurrencyWithCorrectCardinality(subunitsAsWords, GetSubunitName(), GetSubunitsName());
+                subunitsAsWords = AddCurrencyNameWithCorrectCardinality(subunitsAsWords, GetSubunitName(), GetSubunitsName());
                 words = string.Format("{0} and {1}", words, subunitsAsWords);
             }
             return words;
@@ -52,8 +52,8 @@
             return string.Format("{0}{1}{2}", numberAsGroupsHandler.GetGroupFragment(mgAsWords, ConversionsConstants.MILLION, true), numberAsGroupsHandler.GetGroupFragment(tgAsWords, ConversionsConstants.THOUSAND, true), hgAsWords);
         }
 
-        private static string AddCurrencyWithCorrectCardinality(string numberAsWords, string currencySingular, string currencyPlural) {
-            return string.Format("{0} {1}", numberAsWords, numberAsWords == ConversionsConstants.W_ONE ? currencySingular : currencyPlural);
+        private static string AddCurrencyNameWithCorrectCardinality(string numberAsWords, string currencyNameSingular, string currencyNamePlural) {
+            return string.Format("{0} {1}", numberAsWords, numberAsWords == ConversionsConstants.W_ONE ? currencyNameSingular : currencyNamePlural);
         }
 
         protected abstract string GetUnitName();

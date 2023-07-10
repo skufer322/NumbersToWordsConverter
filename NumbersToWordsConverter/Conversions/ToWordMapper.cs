@@ -9,7 +9,7 @@
         /// Converts the given digit into its word-based representation of a single digit number. If the digit '0' is passed and this '0' is part of a number with more than one digit, an empty string is returned instead of the word "zero".
         /// </summary>
         /// <param name="digit">digit which is to be converted into its word-based representation of a single-digit number</param>
-        /// <param name="numberOfDigitsInGroup">amount of digits the number to be converted has</param>
+        /// <param name="numberOfDigitsInGroup">amount of digits the number to convert has</param>
         /// <returns>word-based representation of a single digit number for the passed digit, or an empty string if the digit '0' was passed and the '0' is part of a number with more than one digit</returns>
         /// /// <exception cref="ArgumentException">if the passed char is not a digit</exception>
         string ConvertDigitIntoWordOfSingleDigitNumbers(char digit, int numberOfDigitsInGroup);
@@ -18,16 +18,16 @@
         /// Converts the given digit into its word-based representation of a multiple of ten. If '0' is passed, an empty string is returned.
         /// </summary>
         /// <param name="digit">digit which is to be converted into its word-based representation of a multiple of ten</param>
-        /// <returns>word-based representation as a word of ten for the passed digit, or an empty string if '0' has been passed</returns>
+        /// <returns>representation as a word of ten for the passed digit, or an empty string if '0' has been passed</returns>
         /// <exception cref="ArgumentException">if the passed char is not a digit</exception>
         string ConvertDigitIntoWordOfTenMultiples(char digit);
 
         /// <summary>
-        /// Converts the given number string into its irregularly constructed word-based representation. Only the words for the numbers "10" to "19" are irregularly constructed.
+        /// Converts the given number string into its irregularly constructed word-based representation. Only the words for the numbers between "10" and "19" are irregularly constructed.
         /// </summary>
         /// <param name="number">number string which is to be converted into its irregularly constructed word-based representation</param>
         /// <returns>irregularly constructed word-based representation of the given number string</returns>
-        /// <exception cref="ArgumentException">if any other strings than "10" to "19" are passed</exception>
+        /// <exception cref="ArgumentException">if any other strings than numbers between "10" and "19" are passed</exception>
         string ConvertNumberIntoIrregularlyConstructedWord(string number);
     }
 
@@ -72,7 +72,7 @@
         };
 
         public string ConvertNumberIntoIrregularlyConstructedWord(string number) => number switch {
-            "10" => ConversionsConstants.W_TEN, // is actually not a irregularly constructed word, but is also handled here for convenience
+            "10" => ConversionsConstants.W_TEN, // is actually not an irregularly constructed word, but is also handled here for convenience
             "11" => ConversionsConstants.W_ELEVEN,
             "12" => ConversionsConstants.W_TWELVE,
             "13" => ConversionsConstants.W_THIRTEEN,

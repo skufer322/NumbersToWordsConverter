@@ -30,7 +30,7 @@
         string GetMillionsGroup(string number);
 
         /// <summary>
-        /// Converts the given number group of up to three digits into its word-based representation (natural language).
+        /// Converts the given number group of up to three digits into its word-based representation.
         /// </summary>
         /// <param name="numberGroup">number group which is to be converted into its word-based representation</param>
         /// <returns>number group which has been converted into its word-based representation</returns>
@@ -38,12 +38,12 @@
         string ConvertNumberGroupIntoWords(string numberGroup);
 
         /// <summary>
-        /// Returns the correctly formatted "group fragment", consisting of the word-based represenation of a number group and its scale (e.g. "million").
+        /// Returns the correctly formatted "group fragment", consisting of the word-based representation of a number group and its scale (e.g. "million").
         /// </summary>
         /// <param name="numberAsWords">word-based representation of the number group for which the word group fragment is to be created</param>
         /// <param name="scale">scale of the number group for which the word group fragment is to be created</param>
         /// <param name="isWithSpaceAtFragmentEnd">whether the group fragment shall have a space character as its last character, or not</param>
-        /// <returns>correctly formatted group fragment of the word-based represenation of a number group and its scale</returns>
+        /// <returns>correctly formatted group fragment of the word-based representation of a number group and its scale</returns>
         string GetGroupFragment(string numberAsWords, string scale, bool isWithSpaceAtFragmentEnd);
     }
 

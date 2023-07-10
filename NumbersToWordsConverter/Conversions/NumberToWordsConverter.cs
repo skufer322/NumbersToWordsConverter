@@ -1,12 +1,12 @@
 ﻿namespace Conversions {
 
     /// <summary>
-    /// Interface defining the methods for implementations solving the problem of converting a number-based representation of a currency into its word-based representation (natural language).
+    /// Interface defining the methods for implementations solving the problem of converting a number-based representation of a currency into its word-based representation.
     /// </summary>
     internal interface INumberToWordsConverter {
 
         /// <summary>
-        /// Converts the given number-based representation of a currency into its word-based representation (natural language). The number can be of currency units and sub-units (separated by a separator symbol), or only of currency units (no separator). 
+        /// Converts the given number-based representation of a currency into its word-based representation. The number can be of currency units and sub-units (separated by a separator symbol), or only of currency units (no separator). 
         /// </summary>
         /// <param name="number">number-based representation to be converted into its word-based representation</param>
         /// <returns>word-based representation of the given number-based representation of the currency</returns>
