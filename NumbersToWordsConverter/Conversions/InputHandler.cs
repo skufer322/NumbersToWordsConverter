@@ -31,7 +31,7 @@ namespace Conversions {
         static readonly string EXC_MSG_NUMBER_STRING_IS_NULL_OR_EMPTY_OR_ONLY_WHITESPACE = "The given number string is null, empty, or only whitespace.";
         static readonly string EXC_MSG_INVALID_CHARS_TF = "The given number string '{0}' contains invalid characters! Only digits, a separator ('{1}'), and whitespaces are allowed.";
         static readonly string EXC_MSG_TOO_MANY_SEPARATORS_TF = "Too many separators in the given number string '{0}' ({1} separators), only 1 separator ('{2}') allowed at a max.";
-        static readonly string EXC_MSG_TOO_MANY_DIGITS_FOR_SUBUNIT_TF = "The given subunit number ('{0}') has too many digits ({1}). Only {2} digits are allowed at a max.";
+        static readonly string EXC_MSG_TOO_MANY_DIGITS_FOR_SUBUNIT_TF = "The given subunit number ('{0}') has too many digits ({1}). For the subunit number, only {2} digits are allowed at a max.";
 
         // constants 
         static readonly string SEPARATOR = ",";

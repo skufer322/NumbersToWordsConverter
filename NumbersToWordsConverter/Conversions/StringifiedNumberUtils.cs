@@ -3,7 +3,7 @@
 namespace Conversions {
 
     /// <summary>
-    /// Utility class for methods working on strings representing numbers.
+    /// Utility class for methods working on strings which represent numbers.
     /// </summary>
     internal partial class StringifiedNumberUtils {
 
@@ -16,7 +16,7 @@ namespace Conversions {
         /// Removes all possible whitespaces from the given number string, and returns the cleaned-up string.
         /// </summary>
         /// <param name="number">number string from which all possible whitespaces are to be removed</param>
-        /// <returns>number string from which all possible spaces have been removed</returns>
+        /// <returns>number string from which all possible whitespaces have been removed</returns>
         public static string RemoveWhitespaces(string number) {
             return REGEX_WHITESPACES.Replace(number, string.Empty);
         }
@@ -34,7 +34,7 @@ namespace Conversions {
         /// Replaces the given number string with "0" if the given number string is empty. Else, the given number string is returned unchanged. 
         /// </summary>
         /// <param name="number">number string which is to be replaced with "0" if it is empty</param>
-        /// <returns>"0" if the given number string is empty, else the unchanged number string</returns>
+        /// <returns>"0" if the given number string is empty, or else the unchanged number string</returns>
         public static string ReplaceEmptyStringWithZero(string number) {
             return number == string.Empty ? char.ToString(ConversionsConstants.CH_0) : number;
         }
